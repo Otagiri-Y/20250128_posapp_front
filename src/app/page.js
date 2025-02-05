@@ -8,7 +8,7 @@ export default function Home() {
 
   useEffect(() => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
-    fetch(`${apiUrl}/`)
+    fetch(`${apiUrl}/test`)
       .then((res) => res.json())
       .then((data) => setMessage(data.message))
       .catch((error) => setMessage("Failed to connect to backend"));
