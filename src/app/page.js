@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 export default function Home() {
   const [message, setMessage] = useState("Connecting to backend...");
 
+  console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
+
   useEffect(() => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
     fetch(`${apiUrl}/`)
       .then((res) => res.json())
       .then((data) => setMessage(data.message))
