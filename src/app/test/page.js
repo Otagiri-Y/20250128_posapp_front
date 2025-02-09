@@ -1,3 +1,4 @@
+// バックエンドとの接続をテストするページ（本ページにアクセスし、Hello Worldと表示されれば接続はOK）
 "use client";
 import { useEffect, useState } from "react";
 
