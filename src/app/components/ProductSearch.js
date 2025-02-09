@@ -53,8 +53,8 @@ export default function ProductSearch() {
           <p className="text-red-500">{errorMessage}</p>
         ) : product ? (
           <>
-            <p><strong>商品名:</strong> <span className="text-blue-500">{product.NAME}</span></p>
-            <p><strong>単価:</strong> <span className="text-blue-500">¥{product.PRICE}</span></p>
+            <p className="text-blue-500"><strong>商品名:</strong>{product.NAME}</p>
+            <p className="text-blue-500"><strong>単価:</strong> ¥{product.PRICE}</p>
           </>
         ) : (
           <p>商品情報を入力してください</p>
