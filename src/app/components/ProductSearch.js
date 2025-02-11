@@ -35,66 +35,44 @@ export default function ProductSearch() {
     }
   };
 
-  // 商品追加処理
-  const handleAdd = async () => {
+  // 商品追加処理（購入リスト更新のみ）
+  const handleAdd = () => {
     if (!product) {
       setErrorMessage("先に商品を検索してください");
       return;
     }
 
-    try {
-      const response = await fetch(`${apiUrl}/add`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ jan_codes: [janCode] }),
-      });
+    // 購入リストに追加
+    const newItem = {
+      jan_code: janCode,
+      name: product.NAME,
+      price: product.PRICE,
+      quantity: 1,
+      total: product.PRICE,
+    };
 
-      if (!response.ok) {
-        throw new Error("商品追加に失敗しました");
-      }
+    setPurchaseList((prevList) => [...prevList, newItem]);
 
-      const data = await response.json();
-
-      // 取引IDを保存
-      if (!transactionId) {
-        setTransactionId(data.transaction_id);
-      }
-
-      // 購入リストに追加
-      const newItem = {
-        name: product.NAME,
-        price: product.PRICE,
-        quantity: 1,
-        total: product.PRICE,
-      };
-
-      setPurchaseList((prevList) => [...prevList, newItem]);
-
-      // フィールドをリセット
-      setJanCode("");
-      setProduct(null);
-      setErrorMessage("");
-    } catch (error) {
-      setErrorMessage(error.message);
-    }
+    // フィールドをリセット
+    setJanCode("");
+    setProduct(null);
+    setErrorMessage("");
   };
 
-  // 購入処理
+  // 購入処理（/buy エンドポイントを呼び出す）
   const handlePurchase = async () => {
-    if (!transactionId) {
-      setErrorMessage("購入リストに商品を追加してください");
+    if (purchaseList.length === 0) {
+      setErrorMessage("購入リストが空です");
       return;
     }
 
     try {
-      const response = await fetch(`${apiUrl}/purchase`, {
+      const response = await fetch(`${apiUrl}/buy`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ transaction_id: transactionId }),
+        body: JSON.stringify({ jan_codes: purchaseList.map((item) => item.jan_code) }),
       });
 
       if (!response.ok) {
@@ -105,9 +83,6 @@ export default function ProductSearch() {
       alert(`合計金額: ¥${data.total_price}`);
 
       // 全リストをクリア
-      setJanCode("");
-      setProduct(null);
-      setErrorMessage("");
       setPurchaseList([]);
       setTransactionId(null);
     } catch (error) {
